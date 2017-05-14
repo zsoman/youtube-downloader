@@ -1,6 +1,9 @@
+client_secret.json
+/lib/python/music-yt-dl.py-oauth2.json
+arguments.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
 *$py.class
 
 # C extensions

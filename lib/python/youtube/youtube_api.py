@@ -2,7 +2,7 @@ from json import loads
 
 from requests import get
 
-from lib.python.helpers import internet_on
+from lib.python.helpers import check_internet
 from lib.python.youtube.youtube_datastructures import YoutubePlaylist, YoutubeVideo
 
 YOUTUBE_API_PLAYLIST_URI = 'https://www.googleapis.com/youtube/v3/{}'
@@ -11,14 +11,15 @@ YOUTUBE_API_PLAYLIST_URI = 'https://www.googleapis.com/youtube/v3/{}'
 class YoutubePlaylistAPI:
     type = 'playlistItems'
 
-    def __init__(self, api_key, playlist):
+    def __init__(self, api_key, playlist, logger):
         self.api_key = api_key
         self.playlist = playlist
         self.next_page_token = None
         self.prev_page_token = None
+        self.logger =logger
 
     def get_youtube_playlist_items(self):
-        if internet_on():
+        if check_internet(self.logger):
             while True:
                 if not self.next_page(max_results=50):
                     break
@@ -45,15 +46,16 @@ class YoutubePlaylistAPI:
     def parse_videos(self, data):
         for video in data['items']:
             self.playlist.videos.append(
-                YoutubeVideo(video['snippet']['resourceId']['videoId'], video['snippet']['title']))
+                YoutubeVideo(video['snippet']['resourceId']['videoId'], video['snippet']['title'], video['id']))
 
 
 class YoutubePlaylistsAPI:
     type = 'playlists'
 
-    def __init__(self, channel_id, api_key):
+    def __init__(self, channel_id, api_key, logger):
         self.channel_id = channel_id
         self.api_key = api_key
+        self.logger= logger
 
     def get_all_playlists(self):
         params = {'part': 'snippet,contentDetails', 'channelId': self.channel_id, 'key': self.api_key}
@@ -72,17 +74,3 @@ def current_page_items(type, params):
     result = get(YOUTUBE_API_PLAYLIST_URI.format(type), params=params)
     data = loads(result.text)
     return data
-
-
-# 'UCFyI2wXdWdlgekzUXKp6ErQ',
-if __name__ == '__main__':
-    playlists = YoutubePlaylistsAPI('UCFyI2wXdWdlgekzUXKp6ErQ',
-                                    'AIzaSyBWpeVHM7GHqBA-TVeajyJdliZNXflDEHI').get_all_playlists()
-    for playlist in playlists:
-        print(playlist)
-        # playlist = YoutubePlaylist('PLCt9IUNM0_axDIeyhOwstQiAe3o8sTKHz', 'Deep')
-        y = YoutubePlaylistAPI('AIzaSyBWpeVHM7GHqBA-TVeajyJdliZNXflDEHI', playlist)
-        y.get_youtube_playlist_items()
-
-        for video in y.playlist:
-            print(video)
