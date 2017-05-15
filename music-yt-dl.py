@@ -1,6 +1,7 @@
 import logging
 from argparse import ArgumentParser
 from logging.handlers import RotatingFileHandler
+from os.path import realpath, join, dirname
 
 import youtube_dl
 from tqdm import tqdm
@@ -8,9 +9,9 @@ from tqdm import tqdm
 from lib.python.file_handler import get_song_path, song_exists
 from lib.python.youtube.youtube_api import YoutubePlaylistAPI, YoutubePlaylistsAPI
 
-logger = logging.getLogger('music-yt-dl')
-logger.setLevel(logging.INFO)  # Default logging level.
-file_logger = RotatingFileHandler('.\..\..\music-yt-dl.log', maxBytes=5000000,
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)  # Default logging level.
+file_logger = RotatingFileHandler(join(dirname(realpath(__file__)), 'music-yt-dl.log'), maxBytes=5000000,
                                   backupCount=5)  # Main logging file.
 file_logger.setLevel(logging.DEBUG)  # Main logging file's logging level.
 console_logger = logging.StreamHandler()  # Console logging.
@@ -37,6 +38,7 @@ def main():
     for playlist in playlists:
         logger.info(playlist)
         playlist_videos = get_videos_to_download(playlist, args.api_key)
+
         for video in tqdm(playlist_videos):
             if not song_exists(video.title, playlist_videos.title, args.path, args.special_playlist):
                 logger.debug('Started downloading {}'.format(video))
@@ -80,13 +82,13 @@ def my_hook(dl_dict):
 
 class MyLogger(object):
     def debug(self, msg):
-        logger.debug(msg)
+        pass
 
     def warning(self, msg):
-        logger.warning(msg)
+        pass
 
     def error(self, msg):
-        logger.error(msg)
+        print(msg)
 
 
 def download_video(url, path):

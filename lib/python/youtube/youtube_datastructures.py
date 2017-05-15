@@ -1,4 +1,5 @@
 import sys
+from os.path import realpath, join, dirname
 
 import httplib2
 from apiclient.discovery import build
@@ -6,20 +7,20 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run_flow
 
-CLIENT_SECRETS_FILE = "D:\Desktop\music-yt-dl\client_secret.json"
+CLIENT_SECRETS_FILE = join(dirname(realpath(__file__)), '..\..\..\client_secret.json')
 
-YOUTUBE_READ_WRITE_SSL_SCOPE = "https://www.googleapis.com/auth/youtubepartner " \
-                               "https://www.googleapis.com/auth/youtube " \
-                               "https://www.googleapis.com/auth/youtube.force-ssl"
-API_SERVICE_NAME = "youtube"
-API_VERSION = "v3"
-MISSING_CLIENT_SECRETS_MESSAGE = "WARNING: Please configure OAuth 2.0"
+YOUTUBE_READ_WRITE_SSL_SCOPE = 'https://www.googleapis.com/auth/youtubepartner ' \
+                               'https://www.googleapis.com/auth/youtube ' \
+                               'https://www.googleapis.com/auth/youtube.force-ssl'
+API_SERVICE_NAME = 'youtube'
+API_VERSION = 'v3'
+MISSING_CLIENT_SECRETS_MESSAGE = 'WARNING: Please configure OAuth 2.0'
 
 
 def get_authenticated_service():
     flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE, scope=YOUTUBE_READ_WRITE_SSL_SCOPE,
                                    message=MISSING_CLIENT_SECRETS_MESSAGE)
-    storage = Storage("%s-oauth2.json" % sys.argv[0])
+    storage = Storage('%s-oauth2.json' % sys.argv[0])
     credentials = storage.get()
     if credentials is None or credentials.invalid:
         credentials = run_flow(flow, storage)
@@ -38,7 +39,7 @@ class YoutubeVideo:
         self.video_id = video_id
 
     def __str__(self):
-        return '{} ( {} ) '.format(self.title, self.get_full_url())
+        return '{} ( {} ) '.format(self.title.encode('utf-8'), self.get_full_url())
 
     def get_full_url(self):
         return '{}{}'.format(YoutubeVideo.YOUTUBE_URI, self.url_id)

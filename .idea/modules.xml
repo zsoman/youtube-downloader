@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/music-yt-dl.iml" filepath="$PROJECT_DIR$/.idea/music-yt-dl.iml" />
-      <module fileurl="file://D:\Desktop\music-yt-dl\.idea\youtube-downloader.iml" filepath="D:\Desktop\music-yt-dl\.idea\youtube-downloader.iml" />
     </modules>
   </component>
 </project>

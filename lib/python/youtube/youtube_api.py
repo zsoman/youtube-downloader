@@ -16,7 +16,7 @@ class YoutubePlaylistAPI:
         self.playlist = playlist
         self.next_page_token = None
         self.prev_page_token = None
-        self.logger =logger
+        self.logger = logger
 
     def get_youtube_playlist_items(self):
         if check_internet(self.logger):
@@ -55,7 +55,7 @@ class YoutubePlaylistsAPI:
     def __init__(self, channel_id, api_key, logger):
         self.channel_id = channel_id
         self.api_key = api_key
-        self.logger= logger
+        self.logger = logger
 
     def get_all_playlists(self):
         params = {'part': 'snippet,contentDetails', 'channelId': self.channel_id, 'key': self.api_key}
