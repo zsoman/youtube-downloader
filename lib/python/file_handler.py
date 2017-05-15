@@ -1,13 +1,32 @@
 from datetime import datetime
 from functools import reduce
-from os import makedirs
+from os import makedirs, remove
 from os.path import join, exists, isdir
 
 
 def song_exists(song_title, playlist_name, music_base_path, special_playlist):
-    song_path = join(get_song_path(playlist_name, music_base_path, special_playlist), song_title) + '.mp3'
-    return exists(song_path)
-
+    song_path = join(get_song_path(playlist_name, music_base_path, special_playlist), song_title)
+    to_remove_song=False
+    if exists(song_path + '.mp3'):
+        if exists(song_path  + '.webm'):
+            remove(song_path + '.webm')
+            to_remove_song=True
+        if exists(song_path  + '.jpg'):
+            remove(song_path + '.jpg')
+            to_remove_song=True
+        if exists(song_path  + '.webm.part'):
+            remove(song_path + '.webm.part')
+            to_remove_song=True
+        if exists(song_path  + '.part'):
+            remove(song_path + '.part')
+            to_remove_song=True
+        if to_remove_song:
+            remove(song_path + '.mp3')
+            return False
+        else:
+            return True
+    else:
+        return False
 
 def get_song_path(playlist_name, music_base_path, special_playlist):
     if playlist_name in special_playlist:
