@@ -10,12 +10,11 @@ from lib.python.file_handler import get_song_path, song_exists
 from lib.python.youtube.youtube_api import YoutubePlaylistAPI, YoutubePlaylistsAPI
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)  # Default logging level.
-file_logger = RotatingFileHandler(join(dirname(realpath(__file__)), 'music-yt-dl.log'), maxBytes=5000000,
-                                  backupCount=5)  # Main logging file.
-file_logger.setLevel(logging.DEBUG)  # Main logging file's logging level.
-console_logger = logging.StreamHandler()  # Console logging.
-console_logger.setLevel(logging.INFO)  # Level of logging of STDout.
+logger.setLevel(logging.DEBUG)
+file_logger = RotatingFileHandler(join(dirname(realpath(__file__)), 'music-yt-dl.log'), maxBytes=5000000)
+file_logger.setLevel(logging.DEBUG)
+console_logger = logging.StreamHandler()
+console_logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(processName)s / %(threadName)s - %(name)s - %(levelname)s - %(message)s')
 file_logger.setFormatter(formatter)
 console_logger.setFormatter(formatter)
